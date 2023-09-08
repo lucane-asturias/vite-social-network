@@ -7,8 +7,8 @@
 
   const userStore = useUserStore()
 
-  onMounted(() => {
-    userStore.initStore()
+  onMounted(async () => {
+    await userStore.initStore()
     const token = userStore.user.access
     
     axios.defaults.headers.common["Authorization"] = 

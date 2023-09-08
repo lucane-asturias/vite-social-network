@@ -52,7 +52,7 @@ export const useLogin = () => {
     }, 7000)
   }
 
-  const handleForm = () => userStore.changeForm()
+  const handleForm = () => userStore.toggleForm()
 
   return {
     login_in_submission, login_show_alert,

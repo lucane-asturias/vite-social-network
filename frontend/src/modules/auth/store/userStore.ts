@@ -82,15 +82,15 @@ export const useUserStore = defineStore('userStore', {
     },
     async refreshToken() {
       try {
-        const response = await  axios.post('/api/refresh/', {
+        const { data } = await  axios.post('/api/refresh/', {
           refresh: this.user.refresh 
         })
 
-        this.user.access = response.data.access
+        this.user.access = data.access
 
-        localStorage.setItem('user.access', response.data.access)
-        // set default header to make all axios requests have that access token as an Authorization header 
-        axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access
+        localStorage.setItem('user.access', data.access)
+        // make all axios requests have that access token as an Authorization header 
+        axios.defaults.headers.common["Authorization"] = "Bearer " + data.access
       } catch (error) {
           console.log(error)
           this.removeToken()

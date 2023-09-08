@@ -38,7 +38,7 @@ export const useRegister = () => {
     }, 7000)
   }
 
-  const handleForm = () => userStore.changeForm()
+  const handleForm = () => userStore.toggleForm()
 
   return {
     reg_in_submission, reg_show_alert,
