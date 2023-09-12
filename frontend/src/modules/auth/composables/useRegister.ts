@@ -1,23 +1,32 @@
 import axios from 'axios'
 import { ref } from 'vue'
-import { useUserStore } from '../store/userStore'
+import { useRouter } from 'vue-router'
+
+type ResponseType = { data: { message?: string, detail?: string } }
 
 export const useRegister = () => {
-  const userStore = useUserStore()
+  const router = useRouter()
 
-  const reg_alert_color = ref('bg-blue-500') 
-  const reg_alert_msg = ref('') 
-  const reg_show_alert = ref(false) 
-  const reg_in_submission = ref(false)
+  const reg_alert_color = ref<string>('bg-blue-500') 
+  const reg_alert_msg = ref<string>('') 
+  const reg_show_alert = ref<boolean>(false) 
+  const reg_in_submission = ref<boolean>(false)
 
-  const onRegister = async (values, { resetForm }) => {
+  const onRegister = async (values: { 
+    name: string, 
+    email: string, 
+    password1: string, 
+    password2: string 
+  }, { resetForm }: { 
+    resetForm: Function 
+  }) => {
     reg_alert_color.value = 'bg-blue-500'
     reg_alert_msg.value = 'Please wait! Your account is being created.'
     reg_show_alert.value = true
     reg_in_submission.value = true
 
     try {
-      const { data } = await axios.post('/api/signup/', values)
+      const { data } = await axios.post('/api/signup/', values) as ResponseType
       if (data?.message === 'success') {
         reg_alert_color.value = 'bg-green-500'
         reg_alert_msg.value = 'Success! Your account has been created.'
@@ -30,19 +39,16 @@ export const useRegister = () => {
       console.error(error)
     }
 
-    userStore.toggleForm()
-
     setTimeout(() => {
       reg_in_submission.value = false
+      router.push({ name: 'auth', query: { mode: 'login' } })
       resetForm()
-    }, 7000)
+    }, 1000)
   }
-
-  const handleForm = () => userStore.toggleForm()
 
   return {
     reg_in_submission, reg_show_alert,
     reg_alert_color, reg_alert_msg,
-    onRegister, handleForm
+    onRegister
   }
 }

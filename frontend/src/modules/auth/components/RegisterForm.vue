@@ -12,7 +12,7 @@
   const { 
     reg_in_submission, reg_show_alert,
     reg_alert_color, reg_alert_msg,
-    onRegister, handleForm
+    onRegister
   } = useRegister()
 </script>
 
@@ -28,11 +28,13 @@
             Lorem ipsum dolor sit mate. Lorem ipsum dolor sit mate. Lorem ipsum dolor sit mate.
           </p>
 
-          <p class="font-bold">
+          <p class="font-semibold">
             Already have an account? 
-            <span class="underline cursor-pointer inline-block" @click="handleForm">
+            <router-link 
+              :to="{ name: 'auth', query: { mode: 'login' } }"
+              class="font-bold hover:text-gray-700 underline inline-block">
               Click here
-            </span> to log in!
+            </router-link> to log in!
           </p>
       </div>
     </div>

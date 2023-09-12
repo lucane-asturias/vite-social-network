@@ -10,7 +10,7 @@
   const { 
     login_in_submission, login_show_alert,
     login_alert_color, login_alert_msg,
-    onLogin, handleForm
+    onLogin
   } = useLogin()
   </script>
 
@@ -26,11 +26,13 @@
           Lorem ipsum dolor sit mate. Lorem ipsum dolor sit mate. Lorem ipsum dolor sit mate.
         </p>
 
-        <p class="font-bold">
+        <p class="font-semibold">
           Already have an account? 
-          <span class="underline cursor-pointer inline-block" @click="handleForm">
+          <router-link 
+            :to="{ name: 'auth', query: { mode: 'register' } }"
+            class="font-bold hover:text-gray-700 underline inline-block">
             Click here
-          </span> to create one!
+          </router-link> to create one!
         </p>
       </div>
     </div>
@@ -44,13 +46,13 @@
           <div id="email">
             <label>E-mail</label><br>
             <vee-field type="email" name="email" placeholder="Your e-mail address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" />
-            <ErrorMessage class="text-lg text-red-300" name="email" />
+            <ErrorMessage class="text-lg text-red-500" name="email" />
           </div>
 
           <div id="password">
             <label>Password</label><br>
             <vee-field type="password" name="password" placeholder="Your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg" />
-            <ErrorMessage class="text-lg text-red-300" name="password" />
+            <ErrorMessage class="text-lg text-red-500" name="password" />
           </div>
 
           <div>

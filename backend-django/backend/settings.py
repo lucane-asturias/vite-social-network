@@ -70,7 +70,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     # Project apps
-    'account'
+    'account',
+    'post',
+    'search'
 ]
 
 MIDDLEWARE = [

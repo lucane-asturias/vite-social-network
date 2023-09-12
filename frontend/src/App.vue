@@ -3,6 +3,7 @@
   import { ref, onMounted, onErrorCaptured } from 'vue'
 
   import NavbarMenu from '@/components/NavbarMenu.vue'
+  import Toast from '@/components/Toast.vue'
   import { useUserStore } from '@/modules/auth/store/userStore'
 
   const userStore = useUserStore()
@@ -38,4 +39,6 @@
 
     </router-view>
   </main>
+
+  <Toast />
 </template>

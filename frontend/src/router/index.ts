@@ -2,10 +2,11 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 // lazy-load: dynamically load components when its needed
 const HomeView = () => import('@/views/HomeView.vue')
-const FeedView = () => import('@/views/FeedView.vue')
 const AuthView = () => import('@/modules/auth/views/AuthView.vue')
+const FeedView = () => import('@/modules/feed/views/FeedView.vue')
+const SearchView = () => import('@/modules/feed/views/SearchView.vue')
+const ProfileView = () => import('@/modules/feed/views/ProfileView.vue')
 const MessagesView = () => import('@/views/MessagesView.vue')
-const SearchView = () => import('@/views/SearchView.vue')
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -32,6 +33,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/search',
     name: 'search',
     component: SearchView
+  },
+  {
+    path: '/profile/:id',
+    name: 'profile',
+    component: ProfileView
   },
   {
     path: '/about',
