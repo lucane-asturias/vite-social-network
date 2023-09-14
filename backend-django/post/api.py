@@ -7,7 +7,7 @@ from account.models import User
 from account.serializers import UserSerializer
 
 from .forms import PostForm
-from .models import Post
+from .models import Post, Like
 from .serializers import PostSerializer
 
 
@@ -53,4 +53,24 @@ def post_create(request):
         return JsonResponse(serializer.data, safe=False)
 
     else:
-        return JsonResponse({'error': 'todo'})
+        return JsonResponse({'message': 'error'})
+
+
+@api_view(['POST'])
+def post_increment_like(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if not post.likes.filter(created_by=request.user):
+        like = Like.objects.create(created_by=request.user)
+
+        post.likes_count = post.likes_count + 1
+        post.likes.add(like)
+        post.save()
+
+        return JsonResponse({'message': 'like incremented'})
+    elif post.likes_count == 1:
+        post.likes_count = 0
+        post.likes.filter(created_by=request.user).delete()
+        post.save()
+
+        return JsonResponse({'message': 'like decremented'})

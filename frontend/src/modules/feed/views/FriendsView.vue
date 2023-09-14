@@ -4,7 +4,6 @@
   import { useRoute } from 'vue-router'
   import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
   import Trends from '../components/Trends.vue'
-  import FeedItem from '../components/FeedItem.vue'
   import { useUserStore } from '@/modules/auth/store/userStore'
   import type { RequestType } from '../interfaces/RequestType'
 
@@ -23,8 +22,6 @@
         `/api/friends/${route.params.id}/`
       ) as { data: RequestType }
       
-      console.log('data /api/friends/<uuid:pk>/', data)
-
       friendshipRequests.value = data.requests
       friends.value = data.friends
       user.value = data.user
@@ -36,8 +33,7 @@
   const handleRequest = async (status, pk) => {
     console.log('handleRequest', status)
     try {
-      const { data } = await axios.post(`/api/friends/${pk}/${status}/`)
-      console.log('data /api/friends/<uuid:pk>/<str:status> handleRequest', data)
+      const { data } = await axios.post(`/api/friends/${pk}/${status}/`) as { data: { message: string } }
     } catch (error) {
       console.log('error', error)
     }
@@ -55,7 +51,7 @@
 
         <div class="mt-6 flex space-x-8 justify-around">
           <p class="text-xs text-gray-500">
-            {{ user.friends_count ? user.friends_count : '0' }} friends
+            {{ user.friends_count }} friends
           </p>
           <p class="text-xs text-gray-500">120 posts</p>
         </div>

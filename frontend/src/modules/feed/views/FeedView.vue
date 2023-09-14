@@ -9,7 +9,7 @@
   const feedSchema = reactive({ body: 'max:255' })
 
   const { posts, getPostsFeed, onPostSubmition }: { 
-    posts: PostsType[], 
+    posts: PostsType, 
     getPostsFeed: Function, 
     onPostSubmition: Function 
   } = useFeedView()
