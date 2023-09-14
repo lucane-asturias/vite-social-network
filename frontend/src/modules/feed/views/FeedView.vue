@@ -6,9 +6,7 @@
   import { useFeedView } from '../composables/useFeedView'
   import type { PostsType } from '../interfaces/PostsType'
 
-  const feedSchema = reactive({
-    body: 'required|min:3|max:255'
-  })
+  const feedSchema = reactive({ body: 'max:255' })
 
   const { posts, getPostsFeed, onPostSubmition }: { 
     posts: PostsType[], 

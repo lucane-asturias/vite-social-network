@@ -6,6 +6,7 @@ const AuthView = () => import('@/modules/auth/views/AuthView.vue')
 const FeedView = () => import('@/modules/feed/views/FeedView.vue')
 const SearchView = () => import('@/modules/feed/views/SearchView.vue')
 const ProfileView = () => import('@/modules/feed/views/ProfileView.vue')
+const FriendsView = () => import('@/modules/feed/views/FriendsView.vue')
 const MessagesView = () => import('@/views/MessagesView.vue')
 
 export const routes: Array<RouteRecordRaw> = [
@@ -38,6 +39,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/profile/:id',
     name: 'profile',
     component: ProfileView
+  },
+  {
+    path: '/profile/:id/friends',
+    name: 'friends',
+    component: FriendsView
   },
   {
     path: '/about',

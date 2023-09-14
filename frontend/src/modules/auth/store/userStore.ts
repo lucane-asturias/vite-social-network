@@ -66,7 +66,7 @@ export const useUserStore = defineStore('userStore', {
       this.user.id = user.id
       this.user.name = user.name
       this.user.email = user.email
-      this.user.avatar = user.avatar || null
+      this.user.avatar = user.avatar ?? null
 
       localStorage.setItem('user.id', this.user.id)
       localStorage.setItem('user.name', this.user.name)

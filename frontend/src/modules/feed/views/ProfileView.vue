@@ -16,10 +16,7 @@
 
   const { 
     user, posts, getUserFeedByRouteId, 
-    onPostCreation, onLogOut
-  }: {
-    user: User, posts: Post[], getUserFeedByRouteId: Function
-    onPostCreation: Function, onLogOut: Function
+    onPostCreation, sendFriendshipRequest, onLogOut
   } = useProfileView()
 
   watch(() => 
@@ -37,12 +34,17 @@
         <p><strong v-text="user.name" /></p>
 
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">50 friends</p>
+          <router-link
+            class="text-xs text-gray-500"
+            :to="{ name: 'friends', params: { id: user.id } }"
+          >
+            {{ user.friends_count ? user.friends_count : '0' }} friends
+          </router-link>
           <p class="text-xs text-gray-500">120 posts</p>
         </div>
 
         <div class="mt-6">
-          <button
+          <button @click="sendFriendshipRequest"
             class="inline-block py-4 px-3 bg-purple-600 text-xs text-white rounded-lg" 
             v-if="userStore.user.id !== user.id"
           >

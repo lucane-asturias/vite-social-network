@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { ref } from 'vue'
 
-import { useUserStore } from '@/modules/auth/store/userStore'
 import type { PostsType } from '../interfaces/PostsType'
 
 export const useFeedView = () => {
