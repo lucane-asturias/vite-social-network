@@ -7,8 +7,8 @@ from account.models import User
 from account.serializers import UserSerializer
 
 from .forms import PostForm
-from .models import Post, Like
-from .serializers import PostSerializer
+from .models import Post, Like, Comment
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
 
 
 @api_view(['GET'])
@@ -68,9 +68,33 @@ def post_increment_like(request, pk):
         post.save()
 
         return JsonResponse({'message': 'like incremented'})
-    elif post.likes_count == 1:
-        post.likes_count = 0
+    else:
+        post.likes_count = post.likes_count - 1
         post.likes.filter(created_by=request.user).delete()
         post.save()
 
         return JsonResponse({'message': 'like decremented'})
+
+
+@api_view(['GET'])
+def post_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    return JsonResponse({
+        'post': PostDetailSerializer(post).data
+    })
+
+
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
+
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count = post.comments_count + 1
+    post.save()
+
+    serializer = CommentSerializer(comment)
+
+    return JsonResponse(serializer.data, safe=False)
+

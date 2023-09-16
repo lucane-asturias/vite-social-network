@@ -74,7 +74,7 @@ def send_friendship_request(request, pk):
 
 
 @api_view(['POST'])
-def handle_request(request, pk, status):
+def handle_friendship_request(request, pk, status):
     user = User.objects.get(pk=pk)
     friendship_request = FriendshipRequest.objects.filter(created_for=request.user).get(created_by=user)
     friendship_request.status = status
