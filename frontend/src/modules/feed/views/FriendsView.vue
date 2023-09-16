@@ -30,8 +30,8 @@
     }
   }
 
-  const handleRequest = async (status, pk) => {
-    console.log('handleRequest', status)
+  const onFriendshipRequest = async (status, pk) => {
+    console.log('onFriendshipRequest', status)
     try {
       const { data } = await axios.post(`/api/friends/${pk}/${status}/`) as { data: { message: string } }
     } catch (error) {
@@ -80,11 +80,11 @@
             </div>
 
             <div class="mt-6 space-x-4">
-              <button @click="handleRequest('accepted', friendshipRequest.created_by.id)"
+              <button @click="onFriendshipRequest('accepted', friendshipRequest.created_by.id)"
                 class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">
                 Accept
               </button>
-              <button @click="handleRequest('rejected', friendshipRequest.created_by.id)"
+              <button @click="onFriendshipRequest('rejected', friendshipRequest.created_by.id)"
                 class="inline-block py-4 px-6 bg-red-600 text-white rounded-lg">
                 Reject
               </button>

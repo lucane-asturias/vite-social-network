@@ -38,7 +38,7 @@
             class="text-xs text-gray-500"
             :to="{ name: 'friends', params: { id: user.id } }"
           >
-            {{ user.friends_count ? user.friends_count : '0' }} friends
+            {{ user.friends_count }} friends
           </router-link>
           <p class="text-xs text-gray-500">120 posts</p>
         </div>

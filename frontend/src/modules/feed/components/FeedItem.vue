@@ -45,6 +45,7 @@
 
   <div class="my-6 flex justify-between">
     <div class="flex space-x-6">
+
       <div class="flex items-center space-x-2 cursor-pointer" @click="likePost(post.id)">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
           class="w-6 h-6" :class="[{ isLiked: 'text-purple-600'}, post.likes_count === 1 ? 'text-purple-600' : '' ]">
@@ -52,17 +53,17 @@
         </svg>  
           
           <span class="text-gray-500 text-xs">{{ post.likes_count }} likes</span>
-        </div>
-        
-        <div class="flex items-center space-x-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"></path>
-          </svg> 
-
-          <span class="text-gray-500 text-xs">0 comments</span>
-        </div>
       </div>
-    
+        
+      <router-link :to="{ name: 'post', params: { id: post.id } }" class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"></path>
+        </svg> 
+
+        <span class="text-gray-500 text-xs">{{ post.comments_count }}</span>
+      </router-link>
+    </div>
+  
     <div>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"></path>
