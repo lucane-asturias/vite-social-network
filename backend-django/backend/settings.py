@@ -72,7 +72,8 @@ INSTALLED_APPS = [
     # Project apps
     'account',
     'post',
-    'search'
+    'search',
+    'chat'
 ]
 
 MIDDLEWARE = [

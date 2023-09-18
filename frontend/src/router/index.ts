@@ -8,7 +8,7 @@ const SearchView = () => import('@/modules/feed/views/SearchView.vue')
 const ProfileView = () => import('@/modules/feed/views/ProfileView.vue')
 const FriendsView = () => import('@/modules/feed/views/FriendsView.vue')
 const PostView = () => import('@/modules/feed/views/PostView.vue')
-const MessagesView = () => import('@/views/MessagesView.vue')
+const ChatView = () => import('@/views/ChatView.vue')
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -27,9 +27,9 @@ export const routes: Array<RouteRecordRaw> = [
     component: AuthView
   },
   {
-    path: '/messages',
-    name: 'messages',
-    component: MessagesView
+    path: '/chat',
+    name: 'chat',
+    component: ChatView
   },
   {
     path: '/search',

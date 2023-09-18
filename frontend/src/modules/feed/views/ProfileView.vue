@@ -15,8 +15,9 @@
   const profileSchema = reactive({ body: 'max:255' })
 
   const { 
-    user, posts, getUserFeedByRouteId, 
-    onPostCreation, sendFriendshipRequest, onLogOut
+    user, posts, inSubmission,
+    getUserFeedByRouteId, onPostCreation, 
+    sendFriendshipRequest, sendDirectMessage, onLogOut
   } = useProfileView()
 
   watch(() => 
@@ -40,23 +41,33 @@
           >
             {{ user.friends_count }} friends
           </router-link>
-          <p class="text-xs text-gray-500">120 posts</p>
+          <p class="text-xs text-gray-500">{{ user.posts_count }} posts</p>
         </div>
 
-        <div class="mt-6">
-          <button @click="sendFriendshipRequest"
-            class="inline-block py-4 px-3 bg-purple-600 text-xs text-white rounded-lg" 
-            v-if="userStore.user.id !== user.id"
-          >
-            Send friendship request
-          </button>
+        <div class="mt-6" v-if="!inSubmission || !userStore.user.id">
 
-          <button @click="onLogOut"
-            class="inline-block py-4 px-3 bg-red-600 text-xs text-white rounded-lg" 
-            v-if="userStore.user.id === user.id"
-          >
-            Log out
-          </button>
+          <template v-if="userStore.user?.id !== user.id">
+            <button @click="sendFriendshipRequest"
+              class="inline-block py-4 px-3 bg-purple-600 text-xs text-white rounded-lg" 
+            >
+              Send friendship request
+            </button>
+
+            <button @click="sendDirectMessage"
+              class="inline-block mt-4 py-4 px-3 bg-blue-600 text-xs text-white rounded-lg" 
+            >
+              Send direct message
+            </button>
+          </template>
+
+          <template v-else>
+            <button @click="onLogOut"
+              class="inline-block mt-4 py-4 px-3 bg-red-600 text-xs text-white rounded-lg" 
+            >
+              Log out
+            </button>
+          </template>
+
         </div>
       </div>
     </div>

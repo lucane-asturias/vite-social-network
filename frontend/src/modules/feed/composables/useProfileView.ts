@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/modules/auth/store/userStore'
 import { useToastStore } from '@/store/toastStore'
 import type { User, Post } from '../interfaces/ResponseType'
+import type { MessagesType } from '@/modules/chat/interfaces/ChatTypes'
 
 type ResponseType = { user: User, posts: Post[] }
 
@@ -16,8 +17,10 @@ export const useProfileView = () => {
 
   const user = ref<User | { id: null }>({ id: null })
   const posts = ref<Post[]>([])
+  const inSubmission = ref(false)
   
   const getUserFeedByRouteId = async () => {
+    inSubmission.value = true
     try {
       const { data } = await axios.get(
         `/api/posts/profile/${route.params.id}/`
@@ -26,7 +29,9 @@ export const useProfileView = () => {
       posts.value = data.posts
       user.value = data.user
 
+      inSubmission.value = false
     } catch (error) {
+      inSubmission.value = false
       console.error('ProfileView getUserFeedByRouteId error ---- ', error)
     }
   }
@@ -60,6 +65,20 @@ export const useProfileView = () => {
     }
   }
 
+  const sendDirectMessage = async () => {
+    try {
+      const { data } = await axios.get(
+        `/api/chat/${route.params.id}/get-or-create/`
+      ) as MessagesType
+      
+      console.log('sendDirectMessage --> ', data)
+
+      router.push({ name: 'chat' })
+    } catch (error) {
+      console.log('sendDirectMessage error --> ', error)
+    }
+  }
+
   const onLogOut = () => {
     console.log('Log out')
 
@@ -69,8 +88,8 @@ export const useProfileView = () => {
   }
   
   return {
-    user, posts, 
+    user, posts, inSubmission,
     getUserFeedByRouteId, onPostCreation, 
-    sendFriendshipRequest, onLogOut
+    sendFriendshipRequest, sendDirectMessage, onLogOut
   }
 }
