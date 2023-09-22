@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { onMounted, reactive } from 'vue'
   import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
-  import Trends from '../components/Trends.vue'
+  import Trends from '@/modules/trend/components/Trends.vue'
   import FeedItem from '../components/FeedItem.vue'
   import { useFeedView } from '../composables/useFeedView'
   import type { PostsType } from '../interfaces/PostsType'

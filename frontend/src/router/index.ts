@@ -3,12 +3,18 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // lazy-load: dynamically load components when its needed
 const HomeView = () => import('@/views/HomeView.vue')
 const AuthView = () => import('@/modules/auth/views/AuthView.vue')
+
 const FeedView = () => import('@/modules/feed/views/FeedView.vue')
-const SearchView = () => import('@/modules/feed/views/SearchView.vue')
-const ProfileView = () => import('@/modules/feed/views/ProfileView.vue')
-const FriendsView = () => import('@/modules/feed/views/FriendsView.vue')
 const PostView = () => import('@/modules/feed/views/PostView.vue')
-const ChatView = () => import('@/views/ChatView.vue')
+
+const ProfileView = () => import('@/modules/profile/views/ProfileView.vue')
+const ProfileEditView = () => import('@/modules/profile/views/ProfileEditView.vue')
+const FriendsView = () => import('@/modules/profile/views/FriendsView.vue')
+
+const TrendView = () => import('@/modules/trend/views/TrendView.vue')
+
+const SearchView = () => import('@/modules/search/views/SearchView.vue')
+const ChatView = () => import('@/modues/chat/views/ChatView.vue')
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -42,6 +48,11 @@ export const routes: Array<RouteRecordRaw> = [
     component: ProfileView
   },
   {
+    path: '/profile/edit',
+    name: 'profile_edit',
+    component: ProfileEditView
+  },
+  {
     path: '/profile/:id/friends',
     name: 'friends',
     component: FriendsView
@@ -50,6 +61,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/:id',
     name: 'post',
     component: PostView
+  },
+  {
+    path: '/trends/:id',
+    name: 'trends',
+    component: TrendView
   },
   {
     path: '/about',

@@ -18,6 +18,7 @@ export const useProfileView = () => {
   const user = ref<User | { id: null }>({ id: null })
   const posts = ref<Post[]>([])
   const inSubmission = ref(false)
+  const inSubmissionLogout = ref(false)
   
   const getUserFeedByRouteId = async () => {
     inSubmission.value = true
@@ -71,8 +72,6 @@ export const useProfileView = () => {
         `/api/chat/${route.params.id}/get-or-create/`
       ) as MessagesType
       
-      console.log('sendDirectMessage --> ', data)
-
       router.push({ name: 'chat' })
     } catch (error) {
       console.log('sendDirectMessage error --> ', error)
@@ -81,14 +80,16 @@ export const useProfileView = () => {
 
   const onLogOut = () => {
     console.log('Log out')
+    inSubmissionLogout.value = true
 
     userStore.removeToken()
 
     router.push({ name: 'auth' })
+    inSubmissionLogout.value = false
   }
   
   return {
-    user, posts, inSubmission,
+    user, posts, inSubmission, inSubmissionLogout,
     getUserFeedByRouteId, onPostCreation, 
     sendFriendshipRequest, sendDirectMessage, onLogOut
   }

@@ -26,11 +26,11 @@
               class="flex items-center justify-between"
             >
               <div class="flex items-center space-x-2 cursor-pointer" @click="setActiveConversation(conversation.id)">
-                <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full ml-1">
                 <div v-for="user in conversation.users" :key="user.id">
+                  <img :src="user.get_avatar" class="w-[40px] rounded-full ml-1">
+
                   <p v-if="user.id !== userStore.user.id" 
-                    class="text-xs font-bold" v-text="user.name" 
-                  />
+                    class="text-xs font-bold" v-text="user.name" />
                 </div>
               </div>
               
@@ -57,13 +57,13 @@
                 </span>
               </div>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-                <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
+                <img :src="message.created_by.get_avatar" class="w-[40px] rounded-full">
               </div>
             </div>
 
             <div v-else class="flex w-full mt-2 space-x-3 max-w-md">
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-                <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full ml-1">
+                <img :src="message.created_by.get_avatar" class="w-[40px] rounded-full ml-1">
               </div>
               <div>
                 <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">

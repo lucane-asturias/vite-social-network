@@ -1,16 +1,8 @@
-export interface PostsType {
+export interface TrendPostType {
     id:                   string;
     body:                 string;
-    likes_count?:          number;
-    comments_count?:       number;
-    created_by:           CreatedBy;
-    created_at_formatted: string;
-    comments?:             Comment[];
-}
-
-export interface Comment {
-    id:                   string;
-    body:                 string;
+    likes_count:          number;
+    comments_count:       number;
     created_by:           CreatedBy;
     created_at_formatted: string;
 }
@@ -20,5 +12,6 @@ export interface CreatedBy {
     name:          string;
     email:         string;
     friends_count: number;
+    posts_count:   number;
     get_avatar:    string;
 }

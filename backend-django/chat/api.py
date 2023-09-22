@@ -45,7 +45,7 @@ def conversation_get_or_create(request, user_pk):
 @api_view(['POST'])
 def conversation_send_message(request, conversation_pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=conversation_pk)
-    #  n é só fazer sent_to = User.objects.get(pk=pk)  ?
+    
     for user in conversation.users.all():
         if user != request.user:
             sent_to = user

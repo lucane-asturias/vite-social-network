@@ -53,6 +53,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # A string describing the name of the email field on the User model
     EMAIL_FIELD = 'email' 
     REQUIRED_FIELDS = []
+    # Retrieve the user's avatar or provide a default image if not set
+    def get_avatar(self):
+        if self.avatar:
+            return settings.WEBSITE_URL + self.avatar.url
+        else:
+            return 'https://picsum.photos/200/200'
 
 class FriendshipRequest(models.Model):
     SENT = 'sent'

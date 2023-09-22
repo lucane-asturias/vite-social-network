@@ -2,10 +2,10 @@
   import axios from 'axios'
   import { ref, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
-  import Trends from '../components/Trends.vue'
+  import PeopleYouMayKnow from '@/modules/feed/components/PeopleYouMayKnow.vue'
+  import Trends from '@/modules/trend/components/Trends.vue'
   import { useUserStore } from '@/modules/auth/store/userStore'
-  import type { RequestType } from '../interfaces/RequestType'
+  import type { RequestType } from '@/modules/feed/interfaces/RequestType'
 
   const userStore = useUserStore()
   const route = useRoute()
@@ -45,7 +45,7 @@
 
     <div class="main-left col-span-1">
       <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-        <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
+        <img :src="user.get_avatar" class="mb-6 rounded-full">
         
         <p><strong v-text="user.name" /></p>
 
@@ -65,7 +65,7 @@
 
         <div v-for="friendshipRequest in friendshipRequests" :key="friendshipRequest.id" 
           class="p-4 text-center bg-gray-100 rounded-lg">
-            <img src="https://i.pravatar.cc/100?img=70" class="mb-6 mx-auto rounded-full">
+            <img :src="friendshipRequest.created_by.get_avatar" class="mb-6 mx-auto rounded-full">
         
             <p><strong>
               <router-link 
@@ -96,7 +96,7 @@
 
       <div v-if="friends.length" class="p-4 bg-white border border-gray-200 rounded-lg grid grid-cols-2 gap-4">
         <div v-for="user in friends" :key="user.id" class="p-4 text-center bg-gray-100 rounded-lg">
-          <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
+          <img :src="user.created_by" class="mb-6 rounded-full">
       
           <p><strong>
             <router-link :to="{ name: 'profile', params:{ id: user.id } }" v-text="user.name" />

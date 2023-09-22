@@ -1,53 +1,20 @@
 <script lang="ts" setup>
-  import axios from 'axios'
-  import { reactive, ref, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { reactive } from 'vue'
   import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
-  import Trends from '../components/Trends.vue'
+  import Trends from '@/modules/trend/components/Trends.vue'
   import FeedItem from '../components/FeedItem.vue'
   import CommentItem from '../components/CommentItem.vue'
 
-  import type { PostsType } from '../interfaces/PostsType'
-
-  const route = useRoute()
-
-  const post = ref({ id: null, comments: [] })
-  const comments = ref([])
-  const comment_in_submission = ref(false)
+  import { usePostView } from '../composables/usePostView'
 
   const commentSchema = reactive({ body: 'max:255' })
 
+  const {
+    posts, commentInSubmission, 
+    getPosts, onCommentSubmition
+  } = usePostView()
+
   onMounted(async () => await getPosts())
-
-  const getPosts = async () => {
-    try {
-      const { data } = await axios.get(
-        `/api/posts/${route.params.id}/`
-      ) as { data: PostsType[] }
-
-      post.value = data.post
-    } catch(error) {
-      console.log('error', error)
-    }
-  }
-
-  const onCommentSubmition = async (values: { body: string }, { resetForm }) => {
-    comment_in_submission.value = true
-    try {
-      const { data } = await axios.post(
-        `/api/posts/${route.params.id}/comment/`, {
-        body: values.body
-      }) as PostsType
-
-      comment_in_submission.value = false
-      post.value.comments.push(data)
-      post.value.comments_count++
-      resetForm()
-    } catch (error) {
-      console.error('[PostView.vue] -- on comment submition error ', error)
-      comment_in_submission.value = false
-    }
-  }
 </script>
 
 <template>
@@ -75,7 +42,7 @@
           </div>
 
           <div class="p-4 border-t border-gray-100">
-            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg" :disabled="comment_in_submission">
+            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg" :disabled="commentInSubmission">
               Comment
             </button>
           </div>

@@ -2,8 +2,11 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.urls import reverse
 
-from .models import Post
+from collections import Counter
+
+from .models import Post, Trend
 from account.models import User, FriendshipRequest
+
 
 # Create your tests here.
 
@@ -28,6 +31,8 @@ class PostModelTest(TestCase):
         # Create posts
         Post.objects.create(body='Melao Post content...', created_by=cls.user)
         Post.objects.create(body='Second Melao Post content...', created_by=cls.user)
+        Post.objects.create(body='Test #django hashtag...', created_by=cls.user)
+        Post.objects.create(body='Test #django ist wunderbar', created_by=cls.user)
 
 
     def test_post_list_with_friends(self):
@@ -53,7 +58,25 @@ class PostModelTest(TestCase):
         self.client.post(reverse('handle_friendship_request', args=[userB.id, 'accepted']))
 
         response = self.client.get(reverse('post_list'))
-        self.assertEqual(len(response.json()), 4)
+        self.assertEqual(len(response.json()), 6)
+
+
+    def test_post_list_with_trend_query(self):
+        self.client.defaults['HTTP_AUTHORIZATION'] = f'Bearer {self.access}'
+        response = self.client.get(reverse('post_list'), { 'trend': 'django' })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 2)
+
+        trends = []
+        for post in response.json():
+            for word in post['body'].split():
+                if word[0] == '#':
+                    trends.append(word[1:])
+
+        for trend in trends:
+            self.assertEqual(trend, 'django')
+
+        self.assertEqual(len(trends), 2)
 
 
     def test_post_increment_like(self):
@@ -95,3 +118,29 @@ class PostModelTest(TestCase):
         self.assertEqual(comment[0]['body'], 'First comment...')
         post = Post.objects.get(body='Melao Post content...') # new instance
         self.assertEqual(post.comments_count, 1)
+
+
+    def test_get_trends(self):
+        self.client.defaults['HTTP_AUTHORIZATION'] = f'Bearer {self.access}'
+
+        trends = []
+
+        def extract_hashtags(text, trends):
+            for word in text.split():
+                if word[0] == '#':
+                    trends.append(word[1:])
+            
+            return trends
+
+        for post in Post.objects.all():
+            extract_hashtags(post.body, trends)
+
+        for trend in Counter(trends).most_common(10):
+            Trend.objects.create(hashtag=trend[0], occurences=trend[1])
+
+
+        response = self.client.get(reverse('get_trends'))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]['occurences'], 2)
