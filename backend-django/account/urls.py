@@ -12,4 +12,5 @@ urlpatterns = [
     path('friends/<uuid:pk>/request/', api.send_friendship_request, name='send_friendship_request'),
     path('friends/<uuid:pk>/<str:status>/', api.handle_friendship_request, name='handle_friendship_request'), 
     path('editprofile/', api.edit_profile, name='edit_profile'), 
+    path('editpassword/', api.edit_password, name='edit_password'), 
 ]

@@ -1,3 +1,5 @@
+import type { Comment } from './CommentsType'
+
 export interface User {
     id:            string;
     name:          string;
@@ -12,17 +14,13 @@ export interface Attachment {
     get_image: string;
 }
 
-export interface Post {
+export interface PostType {
     id:                   string;
     body:                 string;
     likes_count:          number;
     comments_count:       number;
     created_by:           User;
     created_at_formatted: string;
-    attachments?:          Attachment[];
-}
-
-export interface ResponseType {
-  users: User[];
-  posts: Post[];
+    attachments?:         Attachment[];
+    comments?:            Comment[];
 }

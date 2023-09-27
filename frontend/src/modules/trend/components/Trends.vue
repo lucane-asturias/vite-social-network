@@ -11,7 +11,6 @@
   const getTrends = async () => {
     try {
       const { data } = await axios.get('/api/posts/trends/') as { data: TrendsType[] }
-      console.log('data trends', data)
       trends.value = data
     } catch(error) {
       console.error('[Trends.vue] getTrends error: ', error)

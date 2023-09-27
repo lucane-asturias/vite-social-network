@@ -71,7 +71,7 @@
           </div>
 
           <div>
-            <button type="submit" :disabled="reg_in_submission" class="py-4 px-6 bg-purple-600 text-white rounded-lg">Register</button>
+            <button type="submit" :disabled="reg_in_submission" class="py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">Register</button>
           </div>
         </vee-form>
       </div>

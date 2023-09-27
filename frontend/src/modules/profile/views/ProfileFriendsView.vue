@@ -1,43 +1,13 @@
 <script lang="ts" setup>
-  import axios from 'axios'
-  import { ref, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
   import PeopleYouMayKnow from '@/modules/feed/components/PeopleYouMayKnow.vue'
   import Trends from '@/modules/trend/components/Trends.vue'
-  import { useUserStore } from '@/modules/auth/store/userStore'
-  import type { RequestType } from '@/modules/feed/interfaces/RequestType'
 
-  const userStore = useUserStore()
-  const route = useRoute()
+  import { useFriends } from '../composables/useFriendsView'
 
-  const user = ref({})
-  const friendshipRequests = ref([])
-  const friends = ref([])
-
-  onMounted(async () => await getFriends())
-
-  const getFriends = async () => {
-    try {
-      const { data } = await axios.get(
-        `/api/friends/${route.params.id}/`
-      ) as { data: RequestType }
-      
-      friendshipRequests.value = data.requests
-      friends.value = data.friends
-      user.value = data.user
-    } catch (error) {
-        console.log('error', error)
-    }
-  }
-
-  const onFriendshipRequest = async (status, pk) => {
-    console.log('onFriendshipRequest', status)
-    try {
-      const { data } = await axios.post(`/api/friends/${pk}/${status}/`) as { data: { message: string } }
-    } catch (error) {
-      console.log('error', error)
-    }
-  }
+  const {
+    user, friends, friendshipRequests,
+    getFriends, onFriendshipRequest
+  } = useFriends()
 </script>
 
 <template>
@@ -45,9 +15,11 @@
 
     <div class="main-left col-span-1">
       <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-        <img :src="user.get_avatar" class="mb-6 rounded-full">
-        
-        <p><strong v-text="user.name" /></p>
+        <div class="w-48 h-48 rounded-full overflow-hidden">
+          <img :src="user.get_avatar" class="object-cover object-center w-full h-full" />
+        </div>
+
+        <p class="mt-5"><strong v-text="user.name" /></p>
 
         <div class="mt-6 flex space-x-8 justify-around">
           <p class="text-xs text-gray-500">
@@ -65,8 +37,10 @@
 
         <div v-for="friendshipRequest in friendshipRequests" :key="friendshipRequest.id" 
           class="p-4 text-center bg-gray-100 rounded-lg">
-            <img :src="friendshipRequest.created_by.get_avatar" class="mb-6 mx-auto rounded-full">
-        
+            <div class="w-[180px] h-[180px] rounded-full overflow-hidden mb-6">
+              <img :src="friendshipRequest.created_by.get_avatar" class="object-cover object-center w-full h-full" />
+            </div>
+
             <p><strong>
               <router-link 
                 :to=" { name: 'profile', params: { id: friendshipRequest.created_by.id} }"
@@ -76,7 +50,7 @@
 
             <div class="mt-6 flex space-x-8 justify-around">
               <p class="text-xs text-gray-500">{{ user.friends_count }} friends</p>
-              <p class="text-xs text-gray-500">120 posts</p>
+              <p class="text-xs text-gray-500">{{ user.posts_count }} posts</p>
             </div>
 
             <div class="mt-6 space-x-4">
@@ -96,7 +70,9 @@
 
       <div v-if="friends.length" class="p-4 bg-white border border-gray-200 rounded-lg grid grid-cols-2 gap-4">
         <div v-for="user in friends" :key="user.id" class="p-4 text-center bg-gray-100 rounded-lg">
-          <img :src="user.created_by" class="mb-6 rounded-full">
+          <div class="w-[180px] h-[180px] rounded-full overflow-hidden mb-6">
+            <img :src="user.get_avatar" class="object-cover object-center w-full h-full" />
+          </div>
       
           <p><strong>
             <router-link :to="{ name: 'profile', params:{ id: user.id } }" v-text="user.name" />
@@ -104,7 +80,7 @@
 
           <div class="mt-6 flex space-x-8 justify-around">
             <p class="text-xs text-gray-500">{{ user.friends_count }} friends</p>
-            <p class="text-xs text-gray-500">120 posts</p>
+            <p class="text-xs text-gray-500">{{ user.posts_count }} posts</p>
           </div>
         </div>
       </div>

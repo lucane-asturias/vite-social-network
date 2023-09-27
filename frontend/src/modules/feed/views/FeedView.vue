@@ -1,58 +1,50 @@
 <script lang="ts" setup>
-  import { onMounted, reactive } from 'vue'
+  import { computed, onMounted, ref, reactive } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { storeToRefs } from 'pinia'
+
   import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
   import Trends from '@/modules/trend/components/Trends.vue'
+
+  import FeedForm from '../components/FeedForm.vue'
   import FeedItem from '../components/FeedItem.vue'
-  import { useFeedView } from '../composables/useFeedView'
-  import type { PostsType } from '../interfaces/PostsType'
 
-  const feedSchema = reactive({ body: 'max:255' })
+  const route = useRoute()
 
-  const { posts, getPostsFeed, onPostSubmition }: { 
-    posts: PostsType, 
-    getPostsFeed: Function, 
-    onPostSubmition: Function 
-  } = useFeedView()
+  const feedStore = useFeedStore()
+  const { posts, getPostsFeed } = storeToRefs(feedStore)
 
   onMounted(async () => await getPostsFeed())
+
+  const shouldRenderChildView = computed(() => route.name === 'post')
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-center col-span-3 space-y-4">
-      <div class="bg-white border border-gray-200 rounded-lg">
-        <vee-form :validation-schema="feedSchema" @submit="onPostSubmition">
+  <div>
+    <router-view v-if="shouldRenderChildView" />
 
-          <div class="p-4">  
-            <vee-field as="textarea" name="body"
-              class="p-4 w-full bg-gray-100 rounded-lg" 
-              placeholder="What are you thinking about?" 
-            />
-            <ErrorMessage class="text-lg text-red-500" name="body" />
-          </div>
+    <div v-else class="max-w-7xl mx-auto space-y-4 p-4 md:grid md:grid-cols-4 md:gap-4">
 
-          <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a href="#" class="inline-block py-4 px-6 bg-gray-600 text-white rounded-lg">Attach image</a>
+      <!-- Main Content -->
+      <div class="main-center md:col-span-3">
+        <div class="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
+          <!-- Feed Form -->
+          <FeedForm />
+        </div>
 
-            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 text-white rounded-lg">Post</button>
-          </div>
-        </vee-form>
+        <div v-for="post in posts" :key="post.id" class="bg-white border border-gray-200 rounded-lg p-4 mt-4">
+          <!-- Feed Item -->
+          <FeedItem :post="post" />
+        </div>
       </div>
 
-      <div 
-        v-for="post in posts" 
-        :key="post.id" 
-        class="p-4 bg-white border border-gray-200 rounded-lg"
-      >
-        <FeedItem :post="post" />
+      <!-- Right Sidebar -->
+      <div class="maion-right md:col-span-1 space-y-4">
+        <PeopleYouMayKnow />
+
+        <Trends />
       </div>
-
     </div>
 
-    <div class="main-right col-span-1 space-y-4">
-      <PeopleYouMayKnow />
-
-      <Trends />
-    </div>
   </div>
 </template>

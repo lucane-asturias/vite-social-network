@@ -2,18 +2,18 @@ import axios from 'axios'
 import { reactive, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { PostsType } from '../interfaces/PostsType'
+import type { PostType } from '../interfaces/PostType'
 
 export const usePostView = () => {
   const route = useRoute()
-  const post = ref<PostsType[]>({ id: null, comments: [] })
+  const post = ref<PostType[]>({ id: null, comments: [] })
   const commentInSubmission = ref(false)
 
   const getPosts = async () => {
     try {
       const { data } = await axios.get(
         `/api/posts/${route.params.id}/`
-      ) as { data: PostsType[] }
+      ) as { data: PostType[] }
 
       post.value = data.post
     } catch(error) {
@@ -32,7 +32,7 @@ export const usePostView = () => {
       const { data } = await axios.post(
         `/api/posts/${route.params.id}/comment/`, {
         body: values.body
-      }) as PostsType
+      }) as PostType
 
       commentInSubmission.value = false
       post.value.comments.push(data)
@@ -45,7 +45,7 @@ export const usePostView = () => {
   }
   
   return {
-    posts, commentInSubmission, 
+    post, commentInSubmission, 
     getPosts, onCommentSubmition
   }
 }

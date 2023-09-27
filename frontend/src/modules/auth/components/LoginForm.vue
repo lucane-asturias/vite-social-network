@@ -27,7 +27,7 @@
         </p>
 
         <p class="font-semibold">
-          Already have an account? 
+          Don't have an account?
           <router-link 
             :to="{ name: 'auth', query: { mode: 'register' } }"
             class="font-bold hover:text-gray-700 underline inline-block">
@@ -56,7 +56,7 @@
           </div>
 
           <div>
-            <button type="submit" :disabled="login_in_submission" class="py-4 px-6 bg-purple-600 text-white rounded-lg">Log in</button>
+            <button type="submit" :disabled="login_in_submission" class="py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">Log in</button>
           </div>
         </vee-form>
       </div>

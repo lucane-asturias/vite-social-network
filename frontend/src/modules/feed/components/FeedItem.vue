@@ -1,9 +1,9 @@
 <script lang="ts" setup>
   import axios from 'axios'
   import { ref } from 'vue'
-  import type { PostsType } from '../interfaces/PostsType'
+  import type { PostType } from '../interfaces/PostType'
 
-  const props = defineProps<{ post: PostsType }>()
+  const props = defineProps<{ post: PostType }>()
 
   const isLiked = ref<boolean>(false)
 
@@ -23,23 +23,28 @@
       console.error('[FeedItem.vue] likePost function error --- ', error)
     }
   }
-
 </script>
 
 <template>
-  <div class="mb-6 flex items-center justify-between">
-    <div class="flex items-center space-x-6">
-      <img :src="post.created_by.get_avatar" class="w-[40px] rounded-full">
+  <div class="mb-6 flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
+    <div class="flex items-center space-x-2">
+      <div class="w-12 h-12 md:w-[40px] md:h-[40px] rounded-full overflow-hidden">
+        <img :src="post.created_by.get_avatar" class="object-cover object-center w-full h-full" />
+      </div>
       
-      <p><strong>
+      <p class="pl-1.5"><strong>
         <router-link 
           :to="{ name: 'profile', params: { id : post.created_by.id } }"
           v-text="post.created_by.name" />
       </strong></p>
     </div>
 
-    <p class="text-gray-600">{{ post.created_at_formatted }} ago</p>
+    <p class="text-gray-600 md:self-end">{{ post.created_at_formatted }} ago</p>
   </div>
+
+  <template v-if="post.attachments.length">
+    <img v-for="image in post.attachments" :key="image.id" :src="image.get_image" class="w-full mb-4 rounded-xl">
+  </template>
 
   <p v-text="post.body" />
 

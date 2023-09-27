@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import type { Comment } from '../interfaces/PostsType'
+  import type { Comment } from '../interfaces/CommentsType'
 
   defineProps<{ comment: Comment }>()
 </script>
@@ -9,7 +9,9 @@
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center space-x-6">
 
-        <img :src="comment.created_by.get_avatar" class="w-[40px] rounded-full">
+        <div class="w-[40px] h-[40px] rounded-full overflow-hidden">
+          <img :src="comment.created_by.get_avatar" class="object-cover object-center w-full h-full" />
+        </div>
         
         <p><strong>
           <router-link :to="{ name: 'profile', params: { id: comment.created_by.id } }">

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import FeedItem from '../components/FeedItem.vue'
+  import FeedItem from '@/modules/feed/components/FeedItem.vue'
   import PeopleYouMayKnow from '@/modules/feed/components/PeopleYouMayKnow.vue'
   import Trends from '@/modules/trend/components/Trends.vue'
   import { useSearchView } from '../composables/useSearchView'

@@ -1,71 +1,71 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-// lazy-load: dynamically load components when its needed
-const HomeView = () => import('@/views/HomeView.vue')
-const AuthView = () => import('@/modules/auth/views/AuthView.vue')
-
-const FeedView = () => import('@/modules/feed/views/FeedView.vue')
-const PostView = () => import('@/modules/feed/views/PostView.vue')
-
-const ProfileView = () => import('@/modules/profile/views/ProfileView.vue')
-const ProfileEditView = () => import('@/modules/profile/views/ProfileEditView.vue')
-const FriendsView = () => import('@/modules/profile/views/FriendsView.vue')
-
-const TrendView = () => import('@/modules/trend/views/TrendView.vue')
-
-const SearchView = () => import('@/modules/search/views/SearchView.vue')
-const ChatView = () => import('@/modues/chat/views/ChatView.vue')
+import HomeView from '@/views/HomeView.vue'
+import FeedView from '@/modules/feed/views/FeedView.vue'
+import PostView from '@/modules/feed/views/PostView.vue'
+import AuthView from '@/modules/auth/views/AuthView.vue'
+import ChatView from '@/modules/chat/views/ChatView.vue'
+import SearchView from '@/modules/search/views/SearchView.vue'
+import ProfileView from '@/modules/profile/views/ProfileView.vue'
+import ProfileFriendsView from '@/modules/profile/views/ProfileFriendsView.vue'
+import ProfileEditView from '@/modules/profile/views/ProfileEditView.vue'
+import TrendView from '@/modules/trend/views/TrendView.vue'
+import AboutView from '@/views/AboutView.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
   },
   {
     path: '/feed',
     name: 'feed',
-    component: FeedView
+    component: FeedView,
+    children: [
+      {
+        path: ':id',
+        name: 'post',
+        component: PostView,
+      },
+    ],
   },
   {
     path: '/auth',
     name: 'auth',
-    component: AuthView
+    component: AuthView,
   },
   {
     path: '/chat',
     name: 'chat',
-    component: ChatView
+    component: ChatView,
   },
   {
     path: '/search',
     name: 'search',
-    component: SearchView
+    component: SearchView,
   },
   {
     path: '/profile/:id',
     name: 'profile',
-    component: ProfileView
+    component: ProfileView,
+    children: [
+      {
+        path: 'friends',
+        name: 'friends',
+        component: ProfileFriendsView,
+      },
+    ],
   },
   {
     path: '/profile/edit',
     name: 'profile_edit',
-    component: ProfileEditView
-  },
-  {
-    path: '/profile/:id/friends',
-    name: 'friends',
-    component: FriendsView
-  },
-  {
-    path: '/:id',
-    name: 'post',
-    component: PostView
+    component: ProfileEditView,
   },
   {
     path: '/trends/:id',
     name: 'trends',
-    component: TrendView
+    component: TrendView,
   },
   {
     path: '/about',
@@ -74,7 +74,7 @@ export const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/AboutView.vue')
-  }
+  },
 ]
 
 const router = createRouter({

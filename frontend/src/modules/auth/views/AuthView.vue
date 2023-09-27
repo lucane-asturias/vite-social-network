@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRoute } from 'vue-router'
   import LoginForm from '../components/LoginForm.vue'
   import RegisterForm from '../components/RegisterForm.vue'
 

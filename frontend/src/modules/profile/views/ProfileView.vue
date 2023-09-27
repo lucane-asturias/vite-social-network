@@ -1,112 +1,109 @@
 <script lang="ts" setup>
-  import { onMounted, reactive, watch } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
+  import { computed, watch } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import { useRoute } from 'vue-router'
+
+  import { useProfileStore } from '../stores/profileStore'
+  import { useUserStore } from '@/modules/auth/store/userStore'
 
   import PeopleYouMayKnow from '@/modules/feed/components/PeopleYouMayKnow.vue'
   import Trends from '@/modules/trend/components/Trends.vue'
   import FeedItem from '@/modules/feed/components/FeedItem.vue'
+
+  import FeedForm from '../components/FeedForm.vue'
   import { useProfileView } from '../composables/useProfileView'
-  import type { User, Post } from '../interfaces/ResponseType'
-  import { useUserStore } from '@/modules/auth/store/userStore'
 
   const route = useRoute()
   const userStore = useUserStore()
-
-  const profileSchema = reactive({ body: 'max:255' })
-
-  const { 
+  const profileStore = useProfileStore()
+  const {
     user, posts, inSubmission, inSubmissionLogout,
-    getUserFeedByRouteId, onPostCreation, 
-    sendFriendshipRequest, sendDirectMessage, onLogOut
-  } = useProfileView()
+    getUserFeedByRouteId, sendFriendshipRequest,
+    sendDirectMessage, onLogOut
+  } = storeToRefs(profileStore)
+
+  const shouldRenderChildView = computed(() => route.name === 'friends')
 
   watch(() => 
-    route.params.id, async () => await getUserFeedByRouteId(), { 
-      deep: true, immediate: true 
-  }) 
+    route.params.id, async () => await profileStore.getUserFeedByRouteId(), { 
+    deep: true, immediate: true 
+  })
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-        <img :src="user.get_avatar" class="mb-6 ml-2.5 rounded-full" />
-        
-        <p><strong v-text="user.name" /></p>
+  <div>
+    <router-view v-if="shouldRenderChildView" />
 
-        <div class="mt-6 flex space-x-8 justify-around">
-          <router-link
-            class="text-xs text-gray-500"
-            :to="{ name: 'friends', params: { id: user.id } }"
-          >
-            {{ user.friends_count }} friends
-          </router-link>
-          <p class="text-xs text-gray-500">{{ user.posts_count }} posts</p>
-        </div>
+    <div v-else class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Left Sidebar (Column 1) -->
+      <div class="main-left md:col-span-1">
+        <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
+          <div class="w-32 h-32 md:w-38 md:h-38 lg:w-48 lg:h-48 rounded-full overflow-hidden mx-auto">
+            <img :src="user.get_avatar" class="object-cover object-center w-full h-full" />
+          </div>
 
-        <div class="mt-6" v-if="!inSubmissionLogout">
+          <p class="mt-5 text-xl md:text-xl lg:text-2xl"><strong v-text="user.name" /></p>
 
-          <template v-if="userStore.user?.id !== user.id">
-            <button @click="sendFriendshipRequest"
-              class="inline-block py-4 px-3 bg-purple-600 hover:bg-purple-700 text-xs text-white rounded-lg" 
+          <div class="mt-6 flex flex-col md:flex-row space-y-2 md:space-x-8 justify-center md:justify-between items-center mx-5">
+            <router-link
+              class="text-xs text-gray-500"
+              :to="{ name: 'friends', params: { id: user.id } }"
             >
-              Send friendship request
-            </button>
-
-            <button @click="sendDirectMessage"
-              class="inline-block mt-4 py-4 px-3 bg-blue-600 hover:bg-blue-700 text-xs text-white rounded-lg" 
-            >
-              Send direct message
-            </button>
-          </template>
-
-          <template v-else>
-            <router-link to="/profile/edit"
-              class="inline-block mt-4 py-4 px-3 mr-2 bg-blue-600 hover:bg-blue-700 text-xs text-white rounded-lg" 
-            >
-              Edit profile
+              {{ user.friends_count }} friends
             </router-link>
+            <p class="text-xs text-gray-500 pb-1.5">{{ user.posts_count }} posts</p>
+          </div>
 
-            <button @click="onLogOut"
-              class="inline-block mt-4 py-4 px-3 bg-red-600 hover:bg-red-700 text-xs text-white rounded-lg" 
-            >
-              Log out
-            </button>
-          </template>
+          <div class="mt-6" v-if="!inSubmissionLogout">
+            <template v-if="userStore.user?.id !== user.id">
+              <button @click="sendFriendshipRequest" :disabled="inSubmission"
+                class="inline-block py-3 px-4 bg-purple-600 hover:bg-purple-700 text-sm text-white rounded-lg" 
+              >
+                Send friendship request
+              </button>
 
+              <button @click="sendDirectMessage" :disabled="inSubmission"
+                class="inline-block mt-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-sm text-white rounded-lg" 
+              >
+                Send direct message
+              </button>
+            </template>
+            <template v-else>
+              <router-link :to="{ name: 'profile_edit' }"
+                class="inline-block mt-2 py-3 px-4 mr-2 bg-blue-600 hover:bg-blue-700 text-sm text-white rounded-lg" 
+              >
+                Edit profile
+              </router-link>
+
+              <button @click="onLogOut" :disabled="inSubmissionLogout"
+                class="inline-block mt-2 py-3 px-4 bg-red-600 hover:bg-red-700 text-sm text-white rounded-lg" 
+              >
+                Log out
+              </button>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="main-center col-span-2 space-y-4">
-      <div v-if="userStore.user.id === user.id" class="bg-white border border-gray-200 rounded-lg">
-        <vee-form @submit="onPostCreation" :validation-schema="profileSchema">
-          <div class="p-4">  
-             <vee-field as="textarea" name="body"
-              class="p-4 w-full bg-gray-100 rounded-lg" 
-              placeholder="What are you thinking about?"
-            />
-           
-            <ErrorMessage class="text-lg text-red-500" name="body" />
-          </div>
+      <!-- Main Content (Column 2 and 3) -->
+      <div class="main-center md:col-span-2 space-y-4">
+        <div v-if="userStore.user.id === user.id" class="bg-white border border-gray-200 rounded-lg">
+          <!-- Feed Form -->
+          <FeedForm />
+        </div>
 
-          <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a href="#" class="inline-block py-4 px-6 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">Attach image</a>
-
-            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">Post</button>
-          </div>
-        </vee-form>
+        <div v-for="post in posts" :key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
+          <FeedItem :post="post" />
+        </div>
       </div>
 
-      <div v-for="post in posts" :key="post.id" class="p-4 bg-white border border-gray-200 rounded-lg">
-        <FeedItem :post="post" />
+      <!-- Right Sidebar (Column 4) -->
+      <div class="main-right md:col-span-1 space-y-4">
+        <PeopleYouMayKnow />
+
+        <Trends />
       </div>
     </div>
 
-    <div class="main-right col-span-1 space-y-4">
-      <PeopleYouMayKnow />
-
-      <Trends />
-    </div>
   </div>
 </template>
