@@ -25,4 +25,5 @@ export interface Post {
 export interface ResponseType {
   users: User[];
   posts: Post[];
+  can_send_friendship_request: boolean;
 }

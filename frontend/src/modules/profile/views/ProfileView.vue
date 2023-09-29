@@ -17,7 +17,9 @@
   const userStore = useUserStore()
   const profileStore = useProfileStore()
   const {
-    user, posts, inSubmission, inSubmissionLogout
+    user, posts, 
+    inSubmission, inSubmissionLogout,
+    canSendFriendshipRequest
   } = storeToRefs(profileStore)
 
   const shouldRenderChildView = computed(() => route.name === 'friends')
@@ -53,7 +55,7 @@
           </div>
 
           <div class="mt-6" v-if="!inSubmissionLogout">
-            <template v-if="userStore.user?.id !== user.id">
+            <template v-if="userStore.user?.id !== user.id && canSendFriendshipRequest">
               <button @click="profileStore.sendFriendshipRequest" :disabled="inSubmission"
                 class="inline-block py-3 px-4 bg-purple-600 hover:bg-purple-700 text-sm text-white rounded-lg" 
               >

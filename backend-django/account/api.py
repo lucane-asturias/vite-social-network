@@ -99,6 +99,13 @@ def handle_friendship_request(request, pk, status):
     return JsonResponse({'message': 'friendship request updated'})
 
 
+@api_view(['GET'])
+def my_friendship_suggestions(request):
+    serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
+
 @api_view(['POST'])
 def edit_profile(request):
     user = request.user

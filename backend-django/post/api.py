@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from rest_framework.decorators import api_view
 
-from account.models import User
+from account.models import User, FriendshipRequest
 from account.serializers import UserSerializer
 from notification.utils import create_notification
 
@@ -33,15 +33,26 @@ def post_list(request):
 
 @api_view(['GET'])
 def post_list_profile(request, id):
-    user = User.objects.get(pk=id)
     posts = Post.objects.filter(created_by_id=id)
+    user = User.objects.get(pk=id)
 
     posts_serializer = PostSerializer(posts, many=True)
     user_serializer = UserSerializer(user)
 
+    can_send_friendship_request = not (
+        # If are already friends
+        user.friends.filter(id=request.user.id).exists() or
+        # If there are any existing friendship requests between the two users
+        FriendshipRequest.objects.filter(
+            Q(created_for=user, created_by=request.user) | 
+            Q(created_for=request.user, created_by=user)
+        ).exists()
+    )
+
     return JsonResponse({
         'posts': posts_serializer.data,
-        'user': user_serializer.data
+        'user': user_serializer.data,
+        'can_send_friendship_request': can_send_friendship_request
     }, safe=False)
 
 

@@ -24,6 +24,7 @@ export const useProfileStore = defineStore('profileStore', () => {
   const user = ref<User | { id: null }>({ id: null })
   const inSubmission = ref<boolean>(false)
   const inSubmissionLogout = ref<boolean>(false)
+  const canSendFriendshipRequest = ref<boolean>(false)
 
   // Actions =====================================
 
@@ -32,9 +33,12 @@ export const useProfileStore = defineStore('profileStore', () => {
       const { data } = await axios.get(
         `/api/posts/profile/${route.params.id}/`
       ) as { data: ResponseType }
+
+      const { posts, user, can_send_friendship_request } = data
       
-      posts.value = data.posts
-      user.value = data.user
+      posts.value = posts
+      user.value = user
+      canSendFriendshipRequest.value = can_send_friendship_request
     } catch (error) {
       console.error('ProfileView getUserFeedByRouteId error ---- ', error)
     }
@@ -47,6 +51,7 @@ export const useProfileStore = defineStore('profileStore', () => {
 
   async function sendFriendshipRequest() {
     inSubmission.value = true
+
     try {
       const { data } = await axios.post(
         `/api/friends/${route.params.id}/request/`
@@ -57,7 +62,9 @@ export const useProfileStore = defineStore('profileStore', () => {
       } else {
         toastStore.showToast(5000, 'The request was sent!', 'bg-emerald-600')
       }
+      
       inSubmission.value = false
+      canSendFriendshipRequest.value = false
     } catch (error) {
       console.error('error', error)
       inSubmission.value = false
@@ -92,6 +99,7 @@ export const useProfileStore = defineStore('profileStore', () => {
 
   return {
     user, posts, inSubmission, inSubmissionLogout,
+    canSendFriendshipRequest,
     getUserFeedByRouteId, sendFriendshipRequest,
     sendDirectMessage, addNewPost, onLogOut
   }
