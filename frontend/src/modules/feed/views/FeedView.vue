@@ -3,6 +3,8 @@
   import { useRoute } from 'vue-router'
   import { storeToRefs } from 'pinia'
 
+  import { useFeedStore } from '../stores/feedStore'
+
   import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue'
   import Trends from '@/modules/trend/components/Trends.vue'
 
@@ -12,9 +14,9 @@
   const route = useRoute()
 
   const feedStore = useFeedStore()
-  const { posts, getPostsFeed } = storeToRefs(feedStore)
+  const { posts } = storeToRefs(feedStore)
 
-  onMounted(async () => await getPostsFeed())
+  onMounted(async () => await feedStore.getPostsFeed())
 
   const shouldRenderChildView = computed(() => route.name === 'post')
 </script>

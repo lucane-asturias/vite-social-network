@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { ref } from 'vue'
-import { useFeedView } from './useFeedView'
+import { useFeedStore } from '../stores/feedStore'
 import type { PostType } from '../interfaces/PostType'
 
 export const useFeedFormStore = defineStore('feedFormStore', () => {

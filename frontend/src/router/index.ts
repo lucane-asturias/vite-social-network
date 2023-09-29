@@ -9,6 +9,7 @@ import SearchView from '@/modules/search/views/SearchView.vue'
 import ProfileView from '@/modules/profile/views/ProfileView.vue'
 import ProfileFriendsView from '@/modules/profile/views/ProfileFriendsView.vue'
 import ProfileEditView from '@/modules/profile/views/ProfileEditView.vue'
+import NotificationsView from '@/modules/notifications/views/NotificationsView.vue'
 import TrendView from '@/modules/trend/views/TrendView.vue'
 import AboutView from '@/views/AboutView.vue'
 
@@ -61,6 +62,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/profile/edit',
     name: 'profile_edit',
     component: ProfileEditView,
+  },
+  {
+    path: '/notifications',
+    name: 'notifications',
+    component: NotificationsView,
   },
   {
     path: '/trends/:id',

@@ -3,6 +3,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+from notification.utils import create_notification
+
 from .forms import SignupForm, ProfileForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
@@ -70,7 +72,10 @@ def send_friendship_request(request, pk):
     if check1 or check2:
         return JsonResponse({'message': 'request already sent'})
     else:
-        FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+        friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+    
+        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+
         return JsonResponse({'message': 'friendship request created'})
 
 
@@ -88,6 +93,8 @@ def handle_friendship_request(request, pk, status):
     request_user = request.user
     request_user.friends_count = request_user.friends_count + 1
     request_user.save()
+
+    notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
 
     return JsonResponse({'message': 'friendship request updated'})
 

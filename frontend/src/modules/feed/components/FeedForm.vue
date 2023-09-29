@@ -1,6 +1,8 @@
 <script lang="ts" setup>
   import { computed, ref, reactive } from 'vue'
-  import { useFeedForm } from '../composables/useFeedForm'
+  import { useFeedFormStore } from '../stores/feedFormStore'
+
+  import { storeToRefs } from 'pinia'
 
   const feedFormStore = useFeedFormStore()
 
@@ -8,7 +10,7 @@
   const feedSchema = reactive({ body: 'max:255' })
 
   const isSubmitButtonDisabled = computed(() => {
-    return !bodyRef.value || !postInSubmition
+    return !bodyRef.value || feedFormStore.inSubmission
   })
 
   const selectImage = ($event) => {
@@ -18,7 +20,7 @@
 </script>
 
 <template>
-  <vee-form :validation-schema="feedSchema" @submit="feedFormStore.onPostSubmition">
+  <vee-form :validation-schema="feedSchema" @submit="feedFormStore.onPostCreation">
     <div class="p-4">  
       <vee-field as="textarea" name="body"
         v-model="bodyRef"

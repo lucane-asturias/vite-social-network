@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 
 from account.models import User
 from account.serializers import UserSerializer
+from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm
 from .models import Post, Like, Comment, Trend
@@ -85,6 +86,10 @@ def post_increment_like(request, pk):
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
+        
+        # Check if request.user is not the creator of the post
+        if request.user.id != post.created_by.id:
+            notification = create_notification(request, 'post_like', post_id=post.id)
 
         return JsonResponse({'message': 'like incremented'})
     else:
@@ -112,6 +117,8 @@ def post_create_comment(request, pk):
     post.comments.add(comment)
     post.comments_count = post.comments_count + 1
     post.save()
+
+    notification = create_notification(request, 'post_comment', post_id=post.id)
 
     serializer = CommentSerializer(comment)
 

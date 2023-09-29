@@ -75,7 +75,8 @@ INSTALLED_APPS = [
     'account',
     'post',
     'search',
-    'chat'
+    'chat',
+    'notification'
 ]
 
 MIDDLEWARE = [

@@ -17,9 +17,7 @@
   const userStore = useUserStore()
   const profileStore = useProfileStore()
   const {
-    user, posts, inSubmission, inSubmissionLogout,
-    getUserFeedByRouteId, sendFriendshipRequest,
-    sendDirectMessage, onLogOut
+    user, posts, inSubmission, inSubmissionLogout
   } = storeToRefs(profileStore)
 
   const shouldRenderChildView = computed(() => route.name === 'friends')
@@ -56,13 +54,13 @@
 
           <div class="mt-6" v-if="!inSubmissionLogout">
             <template v-if="userStore.user?.id !== user.id">
-              <button @click="sendFriendshipRequest" :disabled="inSubmission"
+              <button @click="profileStore.sendFriendshipRequest" :disabled="inSubmission"
                 class="inline-block py-3 px-4 bg-purple-600 hover:bg-purple-700 text-sm text-white rounded-lg" 
               >
                 Send friendship request
               </button>
 
-              <button @click="sendDirectMessage" :disabled="inSubmission"
+              <button @click="profileStore.sendDirectMessage" :disabled="inSubmission"
                 class="inline-block mt-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-sm text-white rounded-lg" 
               >
                 Send direct message
@@ -75,7 +73,7 @@
                 Edit profile
               </router-link>
 
-              <button @click="onLogOut" :disabled="inSubmissionLogout"
+              <button @click="profileStore.onLogOut" :disabled="inSubmissionLogout"
                 class="inline-block mt-2 py-3 px-4 bg-red-600 hover:bg-red-700 text-sm text-white rounded-lg" 
               >
                 Log out

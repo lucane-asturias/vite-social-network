@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import axios from 'axios'
-  import { ref, onMounted, onErrorCaptured } from 'vue'
+  import { ref, onBeforeMount, onErrorCaptured } from 'vue'
 
   import NavbarMenu from '@/components/NavbarMenu.vue'
   import Toast from '@/components/Toast.vue'
@@ -8,20 +8,22 @@
 
   const userStore = useUserStore()
 
-  onMounted(async () => {
+  onBeforeMount(async () => {
+    // Initialize the store before the app is created
     await userStore.initStore()
     const token = userStore.user.access
-    
-    axios.defaults.headers.common["Authorization"] = 
-      `Bearer ${token ? token : ""}`
+
+    // Configure Axios with the token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token || ''}`
   })
 
   const error = ref(false)
-  const errorMsg = ref()
-  onErrorCaptured((error: unknown) => {
-    console.warn(error)
-    errorMsg.value = error
+  const errorMsgFromErrorCaptured = ref('');
+
+  onErrorCaptured((error, vm, info) => {
+    console.error(error)
     error.value = true
+    errorMsgFromErrorCaptured.value = String(error)
     return false
   })
 </script>
@@ -33,7 +35,7 @@
     <router-view v-slot="{ Component }">
       <div v-if="error"
         class="bg-red-200 text-red-500 p-4 rounded-lg border-1 border-red-700" 
-        v-text="errorMsg"
+        v-text="errorMsgFromErrorCaptured"
       />
       <component :is="Component" />
 
