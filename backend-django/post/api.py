@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -24,7 +25,7 @@ def post_list(request):
     trend = request.GET.get('trend', '')
 
     if trend:
-        posts = posts.filter(body__icontains=f"#{trend}")
+        posts = Post.objects.filter(body__icontains=f"#{trend}").filter(is_private=False)
 
     serializer = PostSerializer(posts, many=True)
 
@@ -33,14 +34,18 @@ def post_list(request):
 
 @api_view(['GET'])
 def post_list_profile(request, id):
-    posts = Post.objects.filter(created_by_id=id)
     user = User.objects.get(pk=id)
+    
+    if request.user == user or request.user in user.friends.all():
+        posts = Post.objects.filter(created_by_id=id)
+    else:
+        posts = Post.objects.filter(created_by_id=id).filter(is_private=False)
 
     posts_serializer = PostSerializer(posts, many=True)
     user_serializer = UserSerializer(user)
 
     can_send_friendship_request = not (
-        # If are already friends
+        # If already friends
         user.friends.filter(id=request.user.id).exists() or
         # If there are any existing friendship requests between the two users
         FriendshipRequest.objects.filter(
@@ -113,7 +118,15 @@ def post_increment_like(request, pk):
 
 @api_view(['GET'])
 def post_detail(request, pk):
-    post = Post.objects.get(pk=pk)
+    user_ids = [request.user.id]
+
+    for user in request.user.friends.all():
+        user_ids.append(user.id)
+
+    post = Post.objects.filter(
+        Q(created_by_id__in=list(user_ids)) | 
+        Q(is_private=False)
+    ).get(pk=pk)
 
     return JsonResponse({
         'post': PostDetailSerializer(post).data

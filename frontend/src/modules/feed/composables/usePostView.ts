@@ -32,7 +32,7 @@ export const usePostView = () => {
       const { data } = await axios.post(
         `/api/posts/${route.params.id}/comment/`, {
         body: values.body
-      }) as PostType
+      }) as { data: PostType }
 
       commentInSubmission.value = false
       post.value.comments.push(data)

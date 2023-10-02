@@ -26,17 +26,24 @@ export const useRegister = () => {
     reg_in_submission.value = true
 
     try {
-      const { data } = await axios.post('/api/signup/', values) as ResponseType
+      const { data } = await axios.post('/api/signup/', values) as { data: ResponseType }
+      console.log('data', data)
       if (data?.message === 'success') {
         reg_alert_color.value = 'bg-green-500'
         reg_alert_msg.value = 'Success! Your account has been created.'
         reg_in_submission.value = false
       } else {
         reg_alert_color.value = 'bg-red-500'
-        reg_alert_msg.value = data.detail || 'An unexpected error ocurred. Please try again later.'
+        reg_alert_msg.value = 
+          JSON.parse(data.message).email[0].message ||
+          JSON.parse(data.message).password2[0].message || 
+          'An unexpected error ocurred. Please try again later.'
+        reg_in_submission.value = false
+        return
       }
     } catch (error) {
       console.error(error)
+      return
     }
 
     setTimeout(() => {

@@ -10,6 +10,7 @@ export const useFeedFormStore = defineStore('feedFormStore', () => {
 
   // State Properties ============================
 
+  const isPrivate = ref<boolean>(false)
   const fileImage = ref<boolean | undefined | File>(false)
   const localImage = ref<boolean | string>(false)
   const inSubmission = ref<boolean>(false)
@@ -17,9 +18,14 @@ export const useFeedFormStore = defineStore('feedFormStore', () => {
   // Actions ============================
 
   function resetRefs() {
+    isPrivate.value = false
     fileImage.value = undefined
     localImage.value = false
     inSubmission.value = false
+  }
+
+  function setChecked(booleanValue) {
+    isPrivate.value = booleanValue
   }
 
   const closeImage = () => resetRefs()
@@ -51,14 +57,13 @@ export const useFeedFormStore = defineStore('feedFormStore', () => {
     }
   }
 
-  async function onPostCreation(values: { 
-      body: string 
-    }, { resetForm }) {
+  async function onPostCreation(values: { body: string }, resetForm: Function) {
     inSubmission.value = true
 
     let formData = new FormData()
     formData.append('image', fileImage.value)
     formData.append('body', values.body)
+    formData.append('is_private', isPrivate.value)
 
     try {
       const { data } = await axios.post('/api/posts/create/', formData, {
@@ -70,6 +75,7 @@ export const useFeedFormStore = defineStore('feedFormStore', () => {
       resetForm()
       resetRefs()
     } catch (error) {
+      resetForm()
       resetRefs()
       console.error('feedview -- error', error)
     }
@@ -77,6 +83,6 @@ export const useFeedFormStore = defineStore('feedFormStore', () => {
 
   return { 
     fileImage, inSubmission, localImage,
-    closeImage, onSelectImage, onPostCreation
+    closeImage, onSelectImage, onPostCreation, setChecked
   }
 })

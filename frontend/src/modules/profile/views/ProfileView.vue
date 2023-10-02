@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, watch } from 'vue'
+  import { computed, onMounted, watch } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useRoute } from 'vue-router'
 
@@ -26,8 +26,10 @@
 
   watch(() => 
     route.params.id, async () => await profileStore.getUserFeedByRouteId(), { 
-    deep: true, immediate: true 
+    deep: true
   })
+
+  onMounted(async () => await profileStore.getUserFeedByRouteId())
 </script>
 
 <template>
@@ -54,9 +56,10 @@
             <p class="text-xs text-gray-500 pb-1.5">{{ user.posts_count }} posts</p>
           </div>
 
-          <div class="mt-6" v-if="!inSubmissionLogout">
-            <template v-if="userStore.user?.id !== user.id && canSendFriendshipRequest">
-              <button @click="profileStore.sendFriendshipRequest" :disabled="inSubmission"
+          <div class="mt-6 space-y-4" v-if="!inSubmissionLogout">
+            <template v-if="userStore.user?.id !== user.id">
+
+              <button v-if="canSendFriendshipRequest" @click="profileStore.sendFriendshipRequest" :disabled="inSubmission"
                 class="inline-block py-3 px-4 bg-purple-600 hover:bg-purple-700 text-sm text-white rounded-lg" 
               >
                 Send friendship request
@@ -67,8 +70,10 @@
               >
                 Send direct message
               </button>
+
             </template>
-            <template v-else>
+            <template v-else-if="userStore.user?.id === user.id">
+
               <router-link :to="{ name: 'profile_edit' }"
                 class="inline-block mt-2 py-3 px-4 mr-2 bg-blue-600 hover:bg-blue-700 text-sm text-white rounded-lg" 
               >
@@ -80,6 +85,7 @@
               >
                 Log out
               </button>
+
             </template>
           </div>
         </div>

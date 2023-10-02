@@ -26,7 +26,7 @@ export const useLogin = () => {
     login_in_submission.value = true
 
     try {
-      const { data } = await axios.post('/api/login/', values) as ResponseType
+      const { data } = await axios.post('/api/login/', values) as { data: ResponseType }
 
       login_alert_color.value = 'bg-green-500'
       login_alert_msg.value = 'Success! You are now logged in.'
@@ -37,8 +37,8 @@ export const useLogin = () => {
     } catch (error: any) {
       console.error(error)
       login_alert_color.value = 'bg-red-500'
-      login_in_submission.value = false
       login_alert_msg.value =  error.response?.data.detail || 'Invalid login details.'
+      login_in_submission.value = false
       return
     }
 
@@ -50,6 +50,8 @@ export const useLogin = () => {
       console.error(error)
       login_alert_color.value = 'bg-red-500'
       login_alert_msg.value = error.response?.data.detail || 'Something went wrong!'
+      login_in_submission.value = false
+      return
     }
 
     setTimeout(() => {

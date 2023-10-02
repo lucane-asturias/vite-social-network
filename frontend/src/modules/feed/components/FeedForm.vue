@@ -1,34 +1,49 @@
 <script lang="ts" setup>
   import { computed, ref, reactive } from 'vue'
+  import { storeToRefs } from 'pinia'
   import { useFeedFormStore } from '../stores/feedFormStore'
 
-  import { storeToRefs } from 'pinia'
-
   const feedFormStore = useFeedFormStore()
+  const { inSubmission } = storeToRefs(feedFormStore)
 
   const bodyRef = ref<string>('')
   const feedSchema = reactive({ body: 'max:255' })
 
+  const isChecked = computed({
+    get: () => feedFormStore.isPrivate, // Read the value from the store
+    set: (value) => feedFormStore.setChecked(value) // Set the value in the store
+  })
+
   const isSubmitButtonDisabled = computed(() => {
-    return !bodyRef.value || feedFormStore.inSubmission
+    return !bodyRef.value || inSubmission.value
   })
 
   const selectImage = ($event) => {
     feedFormStore.onSelectImage($event)
     document.getElementById('fileRef').value = ''
   }
+
+  const postCreation = async (values: { body: string }, { resetForm }) => {
+    await feedFormStore.onPostCreation(values, resetForm)
+    document.getElementById('checkbox').checked = false
+  }
 </script>
 
 <template>
-  <vee-form :validation-schema="feedSchema" @submit="feedFormStore.onPostCreation">
+  <vee-form :validation-schema="feedSchema" @submit="postCreation">
     <div class="p-4">  
       <vee-field as="textarea" name="body"
         v-model="bodyRef"
         class="p-4 w-full bg-gray-100 rounded-lg" 
         placeholder="What are you thinking about?" 
       />
-      <ErrorMessage class="text-lg text-red-500" name="body" />
+      <ErrorMessage class="text-lg text-red-500 mb-2" name="body" />
+
+      <label>
+        <input id="checkbox" type="checkbox" v-model="isChecked"> Private
+      </label>
     </div>
+
 
     <div class="p-4 flex justify-between items-center">
       <transition name="fade" mode="out-in">

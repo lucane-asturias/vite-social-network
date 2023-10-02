@@ -1,32 +1,43 @@
 <script lang="ts" setup>
-  import { computed, ref, reactive, onMounted  } from 'vue'
-
+  import { computed, ref, reactive } from 'vue'
+  import { storeToRefs } from 'pinia'
   import { useFeedFormStore } from '../stores/feedFormStore'
 
   const feedFormStore = useFeedFormStore()
+  const { inSubmission } = storeToRefs(feedFormStore)
 
   const bodyRef = ref<string>('')
   const profileSchema = reactive({ body: 'max:255' })
 
-  const isSubmitButtonDisabled = computed(() => {
-    return !bodyRef.value || feedFormStore.inSubmission
+  const isChecked = computed({
+    get: () => feedFormStore.isPrivate, // Read the value from the store
+    set: (value) => feedFormStore.setChecked(value) // Set the value in the store
   })
 
   const selectImage = ($event) => {
     feedFormStore.onSelectImage($event)
     document.getElementById('fileRef').value = ''
   }
+
+  const postCreation = async (values: { body: string }, { resetForm }) => {
+    await feedFormStore.onPostCreation(values, resetForm)
+    document.getElementById('checkbox').checked = false
+  }
 </script>
 
 <template>
-  <vee-form :validation-schema="profileSchema" @submit="feedFormStore.onPostCreation">
+  <vee-form :validation-schema="profileSchema" @submit="postCreation">
     <div class="p-4">  
       <vee-field as="textarea" name="body"
         v-model="bodyRef"
         class="p-4 w-full bg-gray-100 outline-violet-100 rounded-lg" 
         placeholder="What are you thinking about?"
       />
-      <ErrorMessage class="text-lg text-red-500 mt-1 mb-6" name="body" />
+      <ErrorMessage class="text-lg text-red-500 mt-1 mb-2" name="body" />
+
+      <label>
+        <input id="checkbox" type="checkbox" v-model="isChecked"> Private
+      </label>
     </div>
 
     <div class="p-4 border-t border-gray-100 flex justify-between">
@@ -53,7 +64,7 @@
         @change="selectImage($event)" 
       />
 
-      <button type="submit" :disabled="isSubmitButtonDisabled" 
+      <button type="submit" :disabled="!bodyRef" 
         class="inline-block py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
         Post
       </button>

@@ -11,6 +11,7 @@ export function useFriends() {
   const user = ref({})
   const friends = ref([])
   const friendshipRequests = ref([])
+  const requestPending = ref(true)
 
   const getFriends = async () => {
     try {
@@ -21,6 +22,7 @@ export function useFriends() {
       friendshipRequests.value = data.requests
       friends.value = data.friends
       user.value = data.user
+      requestPending.value = false
     } catch (error) {
       console.log('error', error)
     }
@@ -39,6 +41,7 @@ export function useFriends() {
 
   return {
     user, friends, friendshipRequests,
-    getFriends, onFriendshipRequest
+    getFriends, onFriendshipRequest,
+    requestPending
   }
 }

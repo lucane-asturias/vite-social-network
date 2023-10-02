@@ -19,7 +19,7 @@ export interface Post {
     comments_count:       number;
     created_by:           User;
     created_at_formatted: string;
-    attachments?:          Attachment[];
+    attachments?:         Attachment[];
 }
 
 export interface ResponseType {

@@ -10,7 +10,7 @@ from django.utils import timezone
 
 
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wey_backend.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
 
 
@@ -46,4 +46,4 @@ for user in users:
     potential_friends = find_potential_friends(user)
 
     # Add potential friends to the "people you may know" list
-    user.people_you_may_know.add(*potential_friends
+    user.people_you_may_know.add(*potential_friends)

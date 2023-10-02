@@ -41,7 +41,7 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="maion-right md:col-span-1 space-y-4">
+      <div class="main-right md:col-span-1 space-y-6">
         <PeopleYouMayKnow />
 
         <Trends />

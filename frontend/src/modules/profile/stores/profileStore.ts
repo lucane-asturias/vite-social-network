@@ -34,11 +34,9 @@ export const useProfileStore = defineStore('profileStore', () => {
         `/api/posts/profile/${route.params.id}/`
       ) as { data: ResponseType }
 
-      const { posts, user, can_send_friendship_request } = data
-      
-      posts.value = posts
-      user.value = user
-      canSendFriendshipRequest.value = can_send_friendship_request
+      posts.value = data.posts
+      user.value = data.user
+      canSendFriendshipRequest.value = data.can_send_friendship_request
     } catch (error) {
       console.error('ProfileView getUserFeedByRouteId error ---- ', error)
     }

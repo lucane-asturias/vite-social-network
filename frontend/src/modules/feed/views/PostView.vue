@@ -9,7 +9,7 @@
 
   const commentSchema = reactive({ bodyRef: 'max:255' })
 
-  const bodyRef = ref('')
+  const bodyRef = ref<string>('')
 
   const {
     post, commentInSubmition, 
@@ -18,8 +18,8 @@
 
   onMounted(async () => await getPosts())
 
-  const isSubmitButtonDisabled = computed(() => {
-    return !!bodyRef.value || !commentInSubmition
+  const isSubmitButtonDisabled = computed<boolean>(() => {
+    return !bodyRef.value || commentInSubmition
   })
 </script>
 
@@ -49,7 +49,7 @@
           </div>
 
           <div class="p-4 border-t border-gray-100">
-            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg" ::disabled="isSubmitButtonDisabled">
+            <button type="submit" class="inline-block py-4 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg" :disabled="isSubmitButtonDisabled">
               Comment
             </button>
           </div>
