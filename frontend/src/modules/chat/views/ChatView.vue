@@ -17,7 +17,7 @@
   onMounted(async () => await getConversationList())
 
   const isSubmitButtonDisabled = computed(() => {
-    return !bodyRef.value || !chatInSubmission
+    return !bodyRef.value || chatInSubmission.value
   })
 </script>
 
@@ -107,7 +107,7 @@
       <div class="bg-white border border-gray-200 rounded-lg">
         <vee-form @submit="onMessageSubmition" :validation-schema="chatSchema">
           <div class="p-4">
-            <vee-field as="textarea" name="bodyRef"
+            <vee-field as="textarea" name="body"
               v-model="bodyRef"
               class="p-4 w-full bg-gray-100 rounded-lg" 
               placeholder="What do you want to say?" 

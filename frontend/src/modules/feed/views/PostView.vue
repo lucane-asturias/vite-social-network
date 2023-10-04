@@ -7,19 +7,19 @@
 
   import { usePostView } from '../composables/usePostView'
 
-  const commentSchema = reactive({ bodyRef: 'max:255' })
+  const commentSchema = reactive({ body: 'max:255' })
 
   const bodyRef = ref<string>('')
 
   const {
-    post, commentInSubmition, 
+    post, commentInSubmission, 
     getPosts, onCommentSubmition
   } = usePostView()
 
   onMounted(async () => await getPosts())
 
   const isSubmitButtonDisabled = computed<boolean>(() => {
-    return !bodyRef.value || commentInSubmition
+    return !bodyRef.value || commentInSubmission.value
   })
 </script>
 
@@ -39,7 +39,7 @@
 
         <vee-form @submit="onCommentSubmition" :validation-schema="commentSchema">
           <div class="p-4">  
-            <vee-field as="textarea" name="bodyRef"
+            <vee-field as="textarea" name="body"
               v-model="bodyRef"
               class="p-4 w-full bg-gray-100 rounded-lg" 
               placeholder="What do you think?" 

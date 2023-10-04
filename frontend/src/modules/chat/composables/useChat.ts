@@ -52,8 +52,10 @@ export const useChat = () => {
       activeConversation.value.messages.push(data)
 
       chatInSubmission.value = false
+      resetForm()
     } catch (error) {
       chatInSubmission.value = false
+      resetForm()
       console.error('onMessageSubmition error --- ', error)
     }
   }

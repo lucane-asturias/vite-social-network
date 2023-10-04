@@ -25,7 +25,7 @@
   <div>
     <router-view v-if="shouldRenderChildView" />
 
-    <div v-else class="max-w-7xl mx-auto space-y-4 p-4 md:grid md:grid-cols-4 md:gap-4">
+    <div v-else class="max-w-7xl mx-auto p-4 md:grid md:grid-cols-4 gap-4">
 
       <!-- Main Content -->
       <div class="main-center md:col-span-3">
@@ -41,7 +41,7 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="main-right md:col-span-1 space-y-6">
+      <div class="main-right md:col-span-1 space-y-4">
         <PeopleYouMayKnow />
 
         <Trends />
