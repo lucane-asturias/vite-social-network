@@ -16,7 +16,7 @@
     <div class="max-w-7xl mx-auto">
       <div class="flex items-center justify-between">
         <div class="menu-left">
-          <router-link to="/" class="text-xl">Wey</router-link>
+          <router-link to="/" class="text-xl">VSN</router-link>
         </div>
 
         <div class="menu-center flex">

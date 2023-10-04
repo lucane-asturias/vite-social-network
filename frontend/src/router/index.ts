@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { useUserStore } from '@/modules/auth/store/userStore'
 
 import HomeView from '@/views/HomeView.vue'
 import FeedView from '@/modules/feed/views/FeedView.vue'
@@ -28,8 +29,10 @@ export const routes: Array<RouteRecordRaw> = [
         path: ':id',
         name: 'post',
         component: PostView,
+        meta: { requiresAuth: true },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: '/auth',
@@ -40,11 +43,13 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/chat',
     name: 'chat',
     component: ChatView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/search',
     name: 'search',
     component: SearchView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile/:id',
@@ -55,23 +60,28 @@ export const routes: Array<RouteRecordRaw> = [
         path: 'friends',
         name: 'friends',
         component: ProfileFriendsView,
+        meta: { requiresAuth: true },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile/edit',
     name: 'profile_edit',
     component: ProfileEditView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/notifications',
     name: 'notifications',
     component: NotificationsView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/trends/:id',
     name: 'trends',
     component: TrendView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/about',
@@ -91,4 +101,20 @@ const router = createRouter({
     return { top: 0 }
   }
 })
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.requiresAuth) {
+    next()
+    return
+  }
+
+  const authStore = useUserStore()
+  
+  if (authStore.isAuthenticated) {
+    next()
+  } else {
+    next({ name: 'auth', query: { mode: 'login' } })
+  }
+})
+
 export default router
