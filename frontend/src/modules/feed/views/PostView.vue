@@ -45,7 +45,7 @@
               placeholder="What do you think?" 
             />
 
-            <ErrorMessage class="text-lg text-red-500" name="bodyRef" />
+            <ErrorMessage class="text-lg text-red-500" name="body" />
           </div>
 
           <div class="p-4 border-t border-gray-100">

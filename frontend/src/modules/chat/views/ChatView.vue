@@ -113,7 +113,7 @@
               placeholder="What do you want to say?" 
             />
 
-            <ErrorMessage class="text-lg text-red-500" name="bodyRef" />
+            <ErrorMessage class="text-lg text-red-500" name="body" />
           </div>
 
           <div class="p-4 border-t border-gray-200 flex justify-between">
