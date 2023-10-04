@@ -47,6 +47,13 @@ export const useProfileStore = defineStore('profileStore', () => {
     user.value.posts_count++
   }
 
+  function deletePost(id) {
+    const postIndexToDelete = posts.value.findIndex(
+      post => post.id === id
+    )
+    if (postIndexToDelete) posts.value.splice(postIndexToDelete, 1)
+  }
+
   async function sendFriendshipRequest() {
     inSubmission.value = true
 
@@ -99,7 +106,7 @@ export const useProfileStore = defineStore('profileStore', () => {
     user, posts, inSubmission, inSubmissionLogout,
     canSendFriendshipRequest,
     getUserFeedByRouteId, sendFriendshipRequest,
-    sendDirectMessage, addNewPost, onLogOut
+    sendDirectMessage, addNewPost, deletePost, onLogOut
   }
 
 })

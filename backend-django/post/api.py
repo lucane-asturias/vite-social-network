@@ -149,6 +149,27 @@ def post_create_comment(request, pk):
     return JsonResponse(serializer.data, safe=False)
 
 
+@api_view(['DELETE'])
+def post_delete(request, pk):
+    post = Post.objects.filter(created_by=request.user).get(pk=pk)
+    post.delete()
+
+    return JsonResponse({ 'message': 'post_deleted' })
+
+
+@api_view(['POST'])
+def post_report(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if not post.reported_by_users.filter(pk=request.user.pk).exists():
+        post.reported_by_users.add(request.user)
+        post.save()
+
+        return JsonResponse({'message': 'post reported'})
+
+    return JsonResponse({'message': 'post already reported'})
+
+
 @api_view(['GET'])
 def get_trends(request):
     trends = Trend.objects.all()

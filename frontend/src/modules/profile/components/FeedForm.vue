@@ -16,11 +16,11 @@
 
   const selectImage = ($event) => {
     feedFormStore.onSelectImage($event)
-    document.getElementById('fileRef').value = ''
   }
 
   const postCreation = async (values: { body: string }, { resetForm }) => {
     await feedFormStore.onPostCreation(values, resetForm)
+    document.getElementById('fileRef').value = ''
     document.getElementById('checkbox').checked = false
   }
 </script>

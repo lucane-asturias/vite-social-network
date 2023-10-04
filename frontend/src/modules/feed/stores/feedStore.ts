@@ -25,9 +25,16 @@ export const useFeedStore = defineStore('feedStore', () => {
     posts.value.unshift(newPost)
     // user.value.posts_count++
   }
+
+  function deletePost(id) {
+    const postIndexToDelete = posts.value.findIndex(
+      post => post.id === id
+    )
+    posts.value.splice(postIndexToDelete, 1)
+  }
   
   return {
-    posts, getPostsFeed, addNewPost
+    posts, getPostsFeed, addNewPost, deletePost
   }
 
 })
