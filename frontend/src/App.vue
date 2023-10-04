@@ -3,15 +3,12 @@
 
   import NavbarMenu from '@/components/NavbarMenu.vue'
   import Toast from '@/components/Toast.vue'
-  import { useUserStore } from '@/modules/auth/store/userStore'
-
-  const userStore = useUserStore()
 
   const error = ref(false)
   const errorMsgFromErrorCaptured = ref('Something went wrong. Check the logs!')
 
-  onErrorCaptured((error, vm, info) => {
-    console.error(error)
+  onErrorCaptured((err, _vm, _info) => {
+    console.error(err)
     error.value = true
 
     setTimeout(() => error.value = false, 10000)

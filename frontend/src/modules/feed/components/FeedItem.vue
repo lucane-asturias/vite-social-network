@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import axios from 'axios'
   import { ref } from 'vue'
   import { useFeedItem } from '../composables/useFeedItem'
   import type { PostType } from '../interfaces/PostType'

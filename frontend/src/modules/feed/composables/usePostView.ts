@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { reactive, ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { PostType } from '../interfaces/PostType'
