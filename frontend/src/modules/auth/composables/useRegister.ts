@@ -35,9 +35,10 @@ export const useRegister = () => {
       } else {
         reg_alert_color.value = 'bg-red-500'
         reg_alert_msg.value = 
-          JSON.parse(data.message).email[0].message ||
-          JSON.parse(data.message).password2[0].message || 
-          'An unexpected error ocurred. Please try again later.'
+          JSON.parse(data.message).email?.[0].message || 
+          JSON.parse(data.message).password2?.[0].message || 
+          'An unexpected error occurred. Please try again later.'
+
         reg_in_submission.value = false
         return
       }

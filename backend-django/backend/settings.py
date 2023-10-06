@@ -26,9 +26,9 @@ SECRET_KEY = 'django-insecure-8bg003w*hi)gcaja%x7ne_mb%!5*@(7!ss%0=8ts(8=b90taid
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-WEBSITE_URL = 'http://127.0.0.1:8000'
+WEBSITE_URL = 'https://vns-iji1n5p4j-lucane-asturias.vercel.app'
 
-ALLOWED_HOSTS = ['Lucane.pythonanywhere.com']
+ALLOWED_HOSTS = ['vns-iji1n5p4j-lucane-asturias.vercel.app', 'lucane.pythonanywhere.com']
 
 
 # Application definition
@@ -52,11 +52,13 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173"
+    'https://vns-iji1n5p4j-lucane-asturias.vercel.app',
+    'https://lucane.pythonanywhere.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:5173"
+    'https://vns-iji1n5p4j-lucane-asturias.vercel.app',
+    'https://lucane.pythonanywhere.com',
 ]
 
 INSTALLED_APPS = [
@@ -156,7 +158,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'media'
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
